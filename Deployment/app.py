@@ -2,6 +2,8 @@ import streamlit as st
 import pickle 
 import pandas as pd
 import requests
+from dotenv import load_dotenv
+import os
 
 films_dict = pickle.load(open('films_dict.pkl','rb'))
 films = pd.DataFrame(films_dict)
@@ -10,7 +12,9 @@ st.title('Movie Recomendation System')
 similarity = pickle.load(open('similarity.pkl','rb'))
 
 def poster_path(id):
-    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key=5758f48f5bc20e10df7a56cb6833051b&language=en-US'.format(id))
+    load_dotenv()
+    api_key = os.getenv('api_key')
+    response = requests.get('https://api.themoviedb.org/3/movie/{}?api_key={}&language=en-US'.format(id,api_key))
     data = response.json()
     return "https://image.tmdb.org/t/p/w500" + data['poster_path']
 
